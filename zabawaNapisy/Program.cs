@@ -68,7 +68,7 @@ namespace zabawaNapisy
             String s;
             KontenerNapisy przetwarzanyObiekt;
             ZarządcaDLC p = new ZarządcaDLC();
-            Console.WriteLine("Podaj dwa napisy połaczone komenda");
+            Console.WriteLine("Podaj dwa napisy połączone komendą");
             while (true)
             {
                 s = Console.ReadLine();
@@ -82,11 +82,10 @@ namespace zabawaNapisy
 
 
         //funkcja rozdzielenia napisów na podstawie tablicy ASCI
-        //Po wykryciu elementu spoza małych liter alfabetu
-        //wykonywany jest case1 czyli czy zmienna różna od małych liter alfabetu
-        //reszta zapisywana jest jako napis prawy
-        //Po wszystkim zwracany jest obiekt KontenerNapisy. Reprezentujący trzy elementy
-        // napis prawy i lewy oraz instrukcje która informuje w jaki sposób ciąg ma być przetwarzany
+        // rozdziela je na trzy czenści:
+        // -małe litery alfabetu do pierwszego znaku spoza tego ciongu
+        // -znaki niebendonce malymi literami alfabetu, aż do pierwszego wystompienia takiego znaku w ciongu
+        // -cała reszta
         static KontenerNapisy RozdzielNapisy(String input)
         {
             KontenerNapisy ob = new KontenerNapisy();
@@ -94,18 +93,24 @@ namespace zabawaNapisy
 
             for (int i= 0; i< input.Length;i++)
             {
-                
-      
+                if (napis != 1)
+                {
+                    if (!((int)input[i] > 96 && (int)input[i] < 123)) { napis++; }
+                }
+                else
+                {
+                    if (((int)input[i] > 96 && (int)input[i] < 123)) { napis++; }
+                }
+
+
                 switch (napis)
                 {
+                    
                     case 0:
-                        if (!((int)input[i] > 96 && (int)input[i] < 123)) { napis++; };
                         ob.lewyNapis = ob.lewyNapis + input[i];
-                        break;
+                        break;                                            
                     case 1:
-                        if (((int)input[i] > 96 && (int)input[i] < 123)) { napis++; };
-                        ob.instrukcja = input[i].ToString();
-                        napis++;
+                        ob.instrukcja = ob.instrukcja +input[i];
                         break;
                     default:
                         ob.prawyNapis = ob.prawyNapis + input[i];
@@ -170,10 +175,11 @@ namespace zabawaNapisy
         public string Wykonaj(KontenerNapisy napis)
         {
             
-            if (przyłaczoneBibliotekiDLC == null) { return "wystapil blad z biblioteka MEF"; }
+            if (przyłaczoneBibliotekiDLC == null) { return "wystapił błąd z biblioteką MEF"; }
             
             foreach (var i in przyłaczoneBibliotekiDLC)
              {
+
                 if (i.Metadata["Symbol"].Equals(napis.instrukcja))
                 {
                     return i.Value.Operacja(napis.lewyNapis, napis.prawyNapis).ToString();

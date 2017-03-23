@@ -10,8 +10,9 @@ namespace DLLKolejnyProjekt
 {
     public class KlasaDLLProjektu
     {
+        //DLL umieszczone w oddzielnym projekcie w tej samej przestrzeni nazw co projekt podstawowy
         [Export(typeof(IOpreracji))]
-        [ExportMetadata("Symbol", "A")]
+        [ExportMetadata("Symbol", "Z")]
         class innaSuma : IOpreracji
         {
             public String Operacja(string lewy, string prawy)
